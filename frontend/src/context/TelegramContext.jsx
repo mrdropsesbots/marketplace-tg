@@ -15,18 +15,13 @@ export const TelegramProvider = ({ children }) => {
       setTg(telegram)
       setUser(telegram.initDataUnsafe?.user)
       setIsReady(true)
+    } else {
+      setIsReady(true)
     }
   }, [])
 
-  const value = {
-    tg,
-    user,
-    isReady,
-    initData: tg?.initData || '',
-  }
-
   return (
-    <TelegramContext.Provider value={value}>
+    <TelegramContext.Provider value={{ tg, user, isReady, initData: tg?.initData || '' }}>
       {children}
     </TelegramContext.Provider>
   )
@@ -34,8 +29,6 @@ export const TelegramProvider = ({ children }) => {
 
 export const useTelegramContext = () => {
   const context = useContext(TelegramContext)
-  if (!context) {
-    throw new Error('useTelegramContext must be used within TelegramProvider')
-  }
+  if (!context) throw new Error('useTelegramContext must be used within TelegramProvider')
   return context
 }

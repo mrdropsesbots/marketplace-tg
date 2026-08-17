@@ -7,20 +7,15 @@ export default function Favorites() {
   const [favorites, setFavorites] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetchFavorites()
-  }, [])
+  useEffect(() => { fetchFavorites() }, [])
 
   const fetchFavorites = async () => {
     try {
       const res = await api.get('/favorites')
       setProducts(res.data)
-      setFavorites(res.data.map(f => f.product_id))
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
+      setFavorites(res.data.map(f => f.product_id || f.id))
+    } catch (e) { console.error(e) }
+    finally { setLoading(false) }
   }
 
   const toggleFavorite = async (productId) => {
@@ -28,24 +23,24 @@ export default function Favorites() {
       await api.delete(`/favorites/${productId}`)
       setProducts(prev => prev.filter(p => p.id !== productId))
       setFavorites(prev => prev.filter(id => id !== productId))
-    } catch (e) {
-      console.error(e)
-    }
+    } catch (e) { console.error(e) }
   }
 
-  if (loading) return <div className="loading">Загрузка...</div>
-
   return (
-    <div className="container">
-      <h2 style={{ marginBottom: 16 }}>Избранное</h2>
-      {products.length === 0 ? (
-        <div className="empty">Нет избранных товаров</div>
+    <div className="container" style={{ paddingTop: 8 }}>
+      <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 20 }}>❤️ Избранное</h2>
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: 60, color: 'var(--text-secondary)' }}>
+          <div style={{ width: 40, height: 40, border: '3px solid var(--surface-light)', borderTopColor: 'var(--accent)', borderRadius: '50%', animation: 'spin 0.8s linear infinite', margin: '0 auto 16px' }} />
+          Загрузка...
+        </div>
+      ) : products.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-state-icon">💔</div>
+          <div style={{ fontSize: 16, fontWeight: 600 }}>Нет избранных товаров</div>
+        </div>
       ) : (
-        <ProductList
-          products={products}
-          favorites={favorites}
-          onToggleFavorite={toggleFavorite}
-        />
+        <ProductList products={products} favorites={favorites} onToggleFavorite={toggleFavorite} layout="list" />
       )}
     </div>
   )
