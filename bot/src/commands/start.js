@@ -14,7 +14,7 @@ module.exports = async (ctx) => {
     `• 💬 Связываться с продавцами\n\n` +
     `Нажмите кнопку ниже, чтобы открыть магазин:`,
     Markup.inlineKeyboard([
-      [Markup.button.webApp('🛒 Открыть магазин', 'https://mrdropsesbots.github.io/marketplace-tg')],
+      [Markup.button.webApp('🛒 Открыть магазин', 'https://mrdropsesbots.github.io/marketplace-tg/')],
       [Markup.button.callback('❓ Помощь', 'help')]
     ])
   );
